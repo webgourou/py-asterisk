@@ -120,7 +120,11 @@ class BaseChannel(Asterisk.Logging.InstanceLogger):
     def Monitor(self, pathname, format, mix):
         'Begin monitoring of this channel into <pathname> using <format>.'
         return self.manager.Monitor(self, pathname, format, mix)
-
+    
+    def MixMonitor(self, pathname, options):
+        'Begin mixmonitoring of this channel into <pathname> using <format>.'
+        return self.manager.MixMonitor(self, pathname, options)
+    
     def MixMonitorMute(self, channel, direction, state=True):
         'Mute or unmute <direction> of a MixMonitor recording on a <channel>.'
         return self.manager.MixMonitorMute(self, channel, direction, state)
@@ -799,7 +803,18 @@ class CoreActions(object):  # pylint: disable=R0904
         })
 
         return self._translate_response(self.read_response(id))
+    
+    def MixMonitor(self, channel, pathname, options):
+        'Begin mixmonitoring of <channel> into <pathname> using <format>.'
 
+        id = self._write_action('MixMonitor', {
+            'Channel': channel,
+            'File': pathname,
+            'options': options,
+        })
+
+        return self._translate_response(self.read_response(id))
+    
     def MixMonitorMute(self, channel, direction, state=True):
         'Mute or unmute <direction> of a MixMonitor recording on a <channel>.'
 
